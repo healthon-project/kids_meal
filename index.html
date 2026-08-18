@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🍱 나만의 식단 만들기 (음식 추가 버전)</title>
+  <title>🍱 나만의 식단 만들기 (버튼 겹침 수정 완료)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&display=swap" rel="stylesheet">
@@ -586,7 +586,7 @@
       cursor: pointer;
     }
 
-    /* 모바일 오른쪽에 페이지 업다운 바 */
+    /* 모바일 오른쪽에 페이지 업다운 바 (Scroll Navigation Bar) */
     .scroll-nav-bar {
       position: fixed;
       right: 14px;
@@ -595,6 +595,7 @@
       flex-direction: column;
       gap: 10px;
       z-index: 999;
+      transition: opacity 0.2s, visibility 0.2s;
     }
 
     .scroll-btn {
@@ -800,7 +801,7 @@
         </div>
       </div>
       <div class="chat-input-area">
-        <input type="text" id="chat-input" placeholder="내 식단 어때?" onkeypress="handleKeyPress(event)" />
+        <input type="text" id="chat-input" placeholder="내 식단 어때?" onkeypress="handleKeyPress(event)" onfocus="hideScrollNav()" onblur="showScrollNavIfNeeded()" />
         <button class="chat-send-btn" onclick="sendMessage()">전송</button>
       </div>
       <div id="api-key-area">
@@ -816,7 +817,7 @@
   </div>
 
   <!-- 우측 하단 페이지 업/다운 이동 바 -->
-  <div class="scroll-nav-bar">
+  <div class="scroll-nav-bar" id="scroll-nav-bar">
     <div class="scroll-btn" onclick="scrollToTop()" title="맨 위로">▲</div>
     <div class="scroll-btn" onclick="scrollToBottom()" title="맨 아래로">▼</div>
   </div>
@@ -863,6 +864,23 @@
 
     function scrollToBottom() {
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function hideScrollNav() {
+      const nav = document.getElementById('scroll-nav-bar');
+      if (nav) nav.style.display = 'none';
+    }
+
+    function showScrollNavIfNeeded() {
+      const nav = document.getElementById('scroll-nav-bar');
+      const chatbotTab = document.getElementById('chatbot-tab');
+      if (nav) {
+        if (chatbotTab && chatbotTab.classList.contains('active') && window.innerWidth <= 1024) {
+          nav.style.display = 'none';
+        } else {
+          nav.style.display = 'flex';
+        }
+      }
     }
 
     const foodData = [
@@ -958,6 +976,9 @@
       const target = document.getElementById(tabId);
       if(target) target.classList.add('active');
       if(btnElement) btnElement.classList.add('active');
+      
+      // AI 영양사 탭에서는 우측 하단 스크롤 버튼을 숨겨서 입력창/엔터키와 겹치지 않게 함
+      showScrollNavIfNeeded();
       window.scrollTo(0, 0);
     }
 
