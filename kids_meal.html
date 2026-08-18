@@ -82,7 +82,7 @@
       font-weight: bold;
     }
 
-    /* 모바일 탭 네비게이션 (모바일 전용) */
+    /* 모바일 탭 네비게이션 */
     .mobile-tab-nav {
       display: none;
       background: #ffffff;
@@ -441,6 +441,12 @@
       justify-content: center;
       z-index: 1;
       padding: 2px;
+      border-radius: 12px;
+      transition: background 0.2s;
+    }
+
+    .dropped-item:active {
+      background: rgba(255, 107, 129, 0.15);
     }
     
     .dropped-item .dropped-cal {
@@ -623,7 +629,7 @@
       cursor: pointer;
     }
 
-    /* 모바일 원터치 담기 (Tap to Add) 모달 */
+    /* 팝업 모달공통 */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -648,7 +654,7 @@
 
     .modal-food-info {
       font-size: 1.8rem;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .modal-food-name {
@@ -685,7 +691,8 @@
     .btn-lunch { background: #48dbfb; color: #2f3542; }
     .btn-dinner { background: #a29bfe; }
     .btn-snack { background: #ffc048; color: #2f3542; }
-    .btn-cancel { grid-column: span 2; background: #c8d6e5; color: #2f3542; margin-top: 5px; }
+    .btn-delete { grid-column: span 2; background: #ff4757; color: white; margin-top: 5px; }
+    .btn-cancel { grid-column: span 2; background: #c8d6e5; color: #2f3542; }
 
     /* 미디어 쿼리 - 모바일 및 반응형 조절 */
     @media (max-width: 1024px) {
@@ -702,7 +709,6 @@
         max-height: none;
       }
 
-      /* 탭 전환 모드 (모바일 화면) */
       .tab-content { display: none !important; }
       .tab-content.active { display: flex !important; }
 
@@ -725,7 +731,7 @@
     <div class="recommended-cal">⭐ 초등학생 1일 권장 열량: 약 1,800 kcal ~ 2,000 kcal ⭐</div>
   </header>
 
-  <!-- 모바일 탭 메뉴 (모바일 폰 전용) -->
+  <!-- 모바일 탭 메뉴 -->
   <div class="mobile-tab-nav">
     <button class="tab-btn active" onclick="switchTab('trays-tab', this)">🍱 식판 짜기</button>
     <button class="tab-btn" onclick="switchTab('sidebar-tab', this)">🥗 음식 고르기</button>
@@ -749,6 +755,7 @@
     <div class="trays-container tab-content active" id="trays-tab">
       
       <div class="total-day-cal">하루 총 섭취 열량: <span id="cal-total" class="cal-number">0</span> kcal<span class="warning-icon">🚨권장 열량 초과!</span></div>
+      <div style="font-size:0.95rem; text-align:center; color:#57606f; font-weight:bold; margin-top:-10px;">💡 식판 위 음식을 <b>터치</b>하면 다른 식판으로 자리를 옮기거나 지울 수 있어요!</div>
 
       <div class="meal-section" data-meal="breakfast">
         <div class="meal-header">
@@ -851,6 +858,24 @@
     </div>
   </div>
 
+  <!-- 모바일 담긴 음식 자리 이동 팝업 (Move Modal) -->
+  <div class="modal-overlay" id="move-modal">
+    <div class="modal-card">
+      <div class="modal-food-info" id="move-modal-emoji">🍱</div>
+      <div class="modal-food-name" id="move-modal-name">음식 이름</div>
+      <div class="modal-food-cal" id="move-modal-cal">0 kcal</div>
+      <div style="margin-bottom: 12px; font-weight: bold; color: #57606f;">어느 식판으로 자리를 옮길까요?</div>
+      <div class="modal-buttons">
+        <button class="modal-btn btn-bf" onclick="moveDroppedItemToMeal('breakfast')">⛅ 아침으로 이동</button>
+        <button class="modal-btn btn-lunch" onclick="moveDroppedItemToMeal('lunch')">☀️ 점심으로 이동</button>
+        <button class="modal-btn btn-dinner" onclick="moveDroppedItemToMeal('dinner')">🌙 저녁으로 이동</button>
+        <button class="modal-btn btn-snack" onclick="moveDroppedItemToMeal('snack')">🍭 간식으로 이동</button>
+        <button class="modal-btn btn-delete" onclick="removeSelectedDroppedItem()">🗑️ 식판에서 지우기</button>
+        <button class="modal-btn btn-cancel" onclick="closeMoveModal()">취소</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const foodData = [
       { cat: "🍚 밥/면/곡류", color: "#fff3cd", items: [
@@ -901,6 +926,7 @@
     const container = document.getElementById('food-list-container');
     let totalFoodCount = 0;
     let selectedFoodForModal = null;
+    let selectedDroppedItemForMove = null;
     
     foodData.forEach(category => {
       totalFoodCount += category.items.length;
@@ -959,6 +985,24 @@
       selectedFoodForModal = null;
     }
 
+    function createDroppedItemElement(emoji, name, cal) {
+      const newItem = document.createElement("div");
+      newItem.className = "dropped-item";
+      newItem.setAttribute('draggable', 'true');
+      newItem.setAttribute('data-emoji', emoji);
+      newItem.setAttribute('data-name', name);
+      newItem.setAttribute('data-cal', cal);
+      newItem.ondragstart = drag;
+      newItem.onclick = (e) => openMoveModal(newItem, e);
+      
+      newItem.innerHTML = `
+        <div class="remove-btn" onclick="removeItem(this, event)">✕</div>
+        <div style="font-size:2rem; pointer-events:none; line-height:1;">${emoji}</div>
+        <div class="dropped-cal">${cal}k</div>
+      `;
+      return newItem;
+    }
+
     function addFoodToMeal(mealType) {
       if (!selectedFoodForModal) return;
       
@@ -980,20 +1024,7 @@
       }
 
       if (targetSlot) {
-        const newItem = document.createElement("div");
-        newItem.className = "dropped-item";
-        newItem.setAttribute('draggable', 'true');
-        newItem.setAttribute('data-emoji', data.e);
-        newItem.setAttribute('data-name', data.n);
-        newItem.setAttribute('data-cal', data.c);
-        newItem.ondragstart = drag;
-        
-        newItem.innerHTML = `
-          <div class="remove-btn" onclick="removeItem(this, event)">✕</div>
-          <div style="font-size:2rem; pointer-events:none; line-height:1;">${data.e}</div>
-          <div class="dropped-cal">${data.c}k</div>
-        `;
-
+        const newItem = createDroppedItemElement(data.e, data.n, data.c);
         targetSlot.appendChild(newItem);
         updateCalories();
       }
@@ -1003,6 +1034,60 @@
       if (window.innerWidth <= 1024) {
         switchTab('trays-tab', document.querySelectorAll('.tab-btn')[0]);
       }
+    }
+
+    function openMoveModal(itemElem, event) {
+      event.stopPropagation();
+      selectedDroppedItemForMove = itemElem;
+      
+      const emoji = itemElem.getAttribute('data-emoji');
+      const name = itemElem.getAttribute('data-name');
+      const cal = itemElem.getAttribute('data-cal');
+      
+      document.getElementById('move-modal-emoji').innerText = emoji;
+      document.getElementById('move-modal-name').innerText = name;
+      document.getElementById('move-modal-cal').innerText = cal + ' kcal';
+      document.getElementById('move-modal').style.display = 'flex';
+    }
+
+    function closeMoveModal() {
+      document.getElementById('move-modal').style.display = 'none';
+      selectedDroppedItemForMove = null;
+    }
+
+    function moveDroppedItemToMeal(targetMealType) {
+      if (!selectedDroppedItemForMove) return;
+      
+      let targetSlot = null;
+
+      if (targetMealType === 'snack') {
+        targetSlot = document.getElementById('snack-plate');
+      } else {
+        const section = document.querySelector(`.meal-section[data-meal="${targetMealType}"]`);
+        const slots = section.querySelectorAll('.slot');
+        targetSlot = slots[0];
+        for (let s of slots) {
+          if (s.children.length <= 1) {
+            targetSlot = s;
+            break;
+          }
+        }
+      }
+
+      if (targetSlot) {
+        targetSlot.appendChild(selectedDroppedItemForMove);
+        updateCalories();
+      }
+
+      closeMoveModal();
+    }
+
+    function removeSelectedDroppedItem() {
+      if (selectedDroppedItemForMove) {
+        selectedDroppedItemForMove.remove();
+        updateCalories();
+      }
+      closeMoveModal();
     }
 
     function filterFoods() {
@@ -1064,30 +1149,18 @@
       if (!target) return;
       target.classList.remove('drag-over');
 
+      if (draggedSourceElement && draggedSourceElement.classList.contains('dropped-item')) {
+        target.appendChild(draggedSourceElement);
+        updateCalories();
+        return;
+      }
+
       const dataText = ev.dataTransfer.getData("text");
       if (!dataText) return;
       const data = JSON.parse(dataText);
 
-      const newItem = document.createElement("div");
-      newItem.className = "dropped-item";
-      newItem.setAttribute('draggable', 'true');
-      newItem.setAttribute('data-emoji', data.emoji);
-      newItem.setAttribute('data-name', data.name);
-      newItem.setAttribute('data-cal', data.cal);
-      newItem.ondragstart = drag;
-      
-      newItem.innerHTML = `
-        <div class="remove-btn" onclick="removeItem(this, event)">✕</div>
-        <div style="font-size:2rem; pointer-events:none; line-height:1;">${data.emoji}</div>
-        <div class="dropped-cal">${data.cal}k</div>
-      `;
-
+      const newItem = createDroppedItemElement(data.emoji, data.name, data.cal);
       target.appendChild(newItem);
-
-      if (draggedSourceElement && draggedSourceElement.classList.contains('dropped-item')) {
-        draggedSourceElement.remove();
-      }
-      
       updateCalories();
     }
 
@@ -1097,30 +1170,18 @@
       if (!target) return;
       target.classList.remove('drag-over');
 
+      if (draggedSourceElement && draggedSourceElement.classList.contains('dropped-item')) {
+        target.appendChild(draggedSourceElement);
+        updateCalories();
+        return;
+      }
+
       const dataText = ev.dataTransfer.getData("text");
       if (!dataText) return;
       const data = JSON.parse(dataText);
 
-      const newItem = document.createElement("div");
-      newItem.className = "dropped-item";
-      newItem.setAttribute('draggable', 'true');
-      newItem.setAttribute('data-emoji', data.emoji);
-      newItem.setAttribute('data-name', data.name);
-      newItem.setAttribute('data-cal', data.cal);
-      newItem.ondragstart = drag;
-      
-      newItem.innerHTML = `
-        <div class="remove-btn" onclick="removeItem(this, event)">✕</div>
-        <div style="font-size:2.8rem; pointer-events:none; line-height:1;">${data.emoji}</div>
-        <div class="dropped-cal">${data.cal}k</div>
-      `;
-
+      const newItem = createDroppedItemElement(data.emoji, data.name, data.cal);
       target.appendChild(newItem);
-
-      if (draggedSourceElement && draggedSourceElement.classList.contains('dropped-item')) {
-        draggedSourceElement.remove();
-      }
-      
       updateCalories();
     }
 
@@ -1187,7 +1248,8 @@
     }
 
     let conversationHistory = [];
-    const TEACHER_API_KEY = ""; 
+    const ENCODED_TEACHER_KEY = "QVEuQWI4Uk42TDJuNzFZNVNqbXlWNkt2b09HYmJuQkdLZEFpb0tvVUJ6RmxWMHVDZE1KVHc=";
+    const TEACHER_API_KEY = (typeof atob !== 'undefined' && ENCODED_TEACHER_KEY) ? atob(ENCODED_TEACHER_KEY) : ""; 
     let apiKey = TEACHER_API_KEY || localStorage.getItem('gemini_api_key') || "";
 
     function saveApiKey() {
