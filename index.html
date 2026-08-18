@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🍱 나만의 식단 만들기 (모바일 지원)</title>
+  <title>🍱 나만의 식단 만들기 (예쁜 접시 버전)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&display=swap" rel="stylesheet">
@@ -21,10 +21,10 @@
   <style>
     :root {
       --bg-color: #f0f8ff;
-      --tray-bg: #ffd1dc;
-      --tray-lunch: #d4f0f0;
-      --tray-dinner: #e8dff5;
-      --snack-plate: #ffdfba;
+      --plate-bf: #ffb8b8;
+      --plate-lunch: #7ed6df;
+      --plate-dinner: #c8d6e5;
+      --plate-snack: #fedd6b;
       --slot-bg: #ffffff;
       --primary-color: #ff6b81;
       --text-color: #2f3542;
@@ -130,7 +130,7 @@
       border: 2px dashed var(--primary-color);
       overflow-y: auto;
       padding: 15px;
-      border-radius: 20px;
+      border-radius: 24px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.08);
       display: flex;
       flex-direction: column;
@@ -243,7 +243,7 @@
       max-width: 100%;
     }
 
-    /* Main Area - Trays */
+    /* Main Area - Plates (예쁜 접시 4개) */
     .trays-container {
       flex: 1;
       padding: 5px 10px;
@@ -267,12 +267,12 @@
       text-align: center;
       transition: all 0.3s;
       width: 100%;
-      max-width: 500px;
+      max-width: 550px;
     }
 
     .meal-section {
       width: 100%;
-      max-width: 500px;
+      max-width: 550px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -291,8 +291,8 @@
       font-size: clamp(1.1rem, 3.5vw, 1.4rem);
       font-weight: bold;
       color: #fff;
-      padding: 6px 14px;
-      border-radius: 16px;
+      padding: 6px 16px;
+      border-radius: 20px;
       box-shadow: 0 3px 6px rgba(0,0,0,0.1);
     }
     
@@ -300,7 +300,7 @@
       font-size: clamp(1.1rem, 3.5vw, 1.3rem);
       background: #fff;
       padding: 4px 14px;
-      border-radius: 12px;
+      border-radius: 14px;
       color: #2f3542;
       box-shadow: 0 3px 6px rgba(0,0,0,0.08);
       font-weight: bold;
@@ -340,88 +340,49 @@
       animation: shake 0.3s infinite;
     }
 
-    .title-breakfast { background: #ff9ff3; }
-    .title-lunch { background: #48dbfb; color: #2f3542; }
-    .title-dinner { background: #a29bfe; }
-    .title-snack { background: #ffc048; color: #2f3542; }
+    .title-breakfast { background: #ff7675; }
+    .title-lunch { background: #00cec9; color: #fff; }
+    .title-dinner { background: #6c5ce7; }
+    .title-snack { background: #fdcb6e; color: #2f3542; }
 
-    /* Tray Design */
-    .tray {
-      background: var(--tray-bg);
-      border-radius: 24px;
-      padding: 12px;
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      grid-template-rows: 100px 130px;
-      gap: 10px;
+    /* 예쁜 접시 (Meal Plate) 디자인 4개 */
+    .meal-plate {
       width: 100%;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.08), inset 0 4px 10px rgba(255,255,255,0.6);
-      position: relative;
-    }
-
-    .lunch { background: var(--tray-lunch); }
-    .tray.dinner { background: var(--tray-dinner); }
-
-    .slot {
-      background: var(--slot-bg);
-      border-radius: 16px;
-      box-shadow: inset 0 3px 8px rgba(0,0,0,0.06);
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 4px;
-      padding: 24px 4px 4px 4px;
-      position: relative;
-      border: 2px dashed rgba(0,0,0,0.12);
-      transition: all 0.2s ease;
-      overflow-y: auto;
-    }
-
-    .slot.drag-over {
-      background: #fffdf0;
-      border-color: #ffca28;
-      transform: scale(1.02);
-    }
-
-    /* Tray Layout */
-    .slot-side1, .slot-side2, .slot-side3 { grid-column: span 2; }
-    .slot-rice { grid-column: span 3; border-radius: 22px; }
-    .slot-soup { grid-column: span 3; border-radius: 22px; }
-
-    .slot-label {
-      position: absolute;
-      top: 4px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #8395a7;
-      pointer-events: none;
-      z-index: 5;
-    }
-
-    /* Snack Plate */
-    .snack-plate {
-      width: 100%;
-      min-height: 150px;
-      background: var(--slot-bg);
-      border-radius: 24px;
-      border: 8px solid var(--snack-plate);
-      box-shadow: inset 0 4px 10px rgba(0,0,0,0.08), 0 6px 15px rgba(0,0,0,0.08);
+      min-height: 180px;
+      background: #ffffff;
+      border-radius: 35px;
+      border: 8px solid var(--plate-color, #ffb8b8);
+      box-shadow: inset 0 6px 15px rgba(0,0,0,0.06), 0 10px 20px rgba(0,0,0,0.08);
       display: flex;
       align-items: center;
-      justify-content: center;
-      position: relative;
-      transition: all 0.2s ease;
+      justify-content: flex-start;
       flex-wrap: wrap;
       align-content: flex-start;
-      gap: 10px;
-      padding: 20px 15px;
+      gap: 12px;
+      padding: 22px;
+      position: relative;
+      transition: all 0.2s ease;
     }
 
-    .snack-plate.drag-over {
+    /* 접시 무늬 입체감 */
+    .meal-plate::before {
+      content: "";
+      position: absolute;
+      top: 6px; left: 6px; right: 6px; bottom: 6px;
+      border: 2px dashed rgba(0,0,0,0.08);
+      border-radius: 28px;
+      pointer-events: none;
+    }
+
+    .plate-bf { --plate-color: var(--plate-bf); }
+    .plate-lunch { --plate-color: var(--plate-lunch); }
+    .plate-dinner { --plate-color: var(--plate-dinner); }
+    .plate-snack { --plate-color: var(--plate-snack); }
+
+    .meal-plate.drag-over {
       background: #fffdf0;
-      border-color: #ffd32a;
-      transform: scale(1.02);
+      transform: scale(1.015);
+      border-style: double;
     }
 
     /* Pop Animation */
@@ -439,26 +400,30 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 1;
-      padding: 2px;
-      border-radius: 12px;
-      transition: background 0.2s;
+      z-index: 10;
+      padding: 4px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.7);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+      transition: transform 0.15s ease;
     }
 
     .dropped-item:active {
+      transform: scale(0.92);
       background: rgba(255, 107, 129, 0.15);
     }
     
     .dropped-item .dropped-cal {
-      font-size: 0.75rem;
-      background: rgba(255,255,255,0.9);
-      border-radius: 8px;
-      padding: 1px 4px;
-      color: #ff6b81;
-      margin-top: -3px;
+      font-size: 0.8rem;
+      background: #fff;
+      border-radius: 10px;
+      padding: 2px 6px;
+      color: #ff4757;
+      margin-top: 2px;
       font-weight: bold;
       pointer-events: none;
       white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
     }
 
     .remove-btn {
@@ -470,13 +435,13 @@
       border-radius: 50%;
       font-size: 0.8rem;
       cursor: pointer;
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      z-index: 10;
+      z-index: 15;
     }
 
     /* Trash Area */
@@ -509,7 +474,7 @@
       flex-shrink: 0;
       background: #f8f9fa;
       border: 2px dashed #9c88ff;
-      border-radius: 20px;
+      border-radius: 24px;
       display: flex;
       flex-direction: column;
       box-shadow: 0 10px 25px rgba(0,0,0,0.08);
@@ -653,8 +618,8 @@
     }
 
     .modal-food-info {
-      font-size: 1.8rem;
-      margin-bottom: 8px;
+      font-size: 2.2rem;
+      margin-bottom: 6px;
     }
 
     .modal-food-name {
@@ -687,11 +652,11 @@
     }
 
     .modal-btn:active { transform: scale(0.95); }
-    .btn-bf { background: #ff9ff3; }
-    .btn-lunch { background: #48dbfb; color: #2f3542; }
-    .btn-dinner { background: #a29bfe; }
-    .btn-snack { background: #ffc048; color: #2f3542; }
-    .btn-delete { grid-column: span 2; background: #ff4757; color: white; margin-top: 5px; }
+    .btn-bf { background: #ff7675; }
+    .btn-lunch { background: #00cec9; color: #fff; }
+    .btn-dinner { background: #6c5ce7; }
+    .btn-snack { background: #fdcb6e; color: #2f3542; }
+    .btn-delete { grid-column: span 2; background: #ff4757; color: white; margin-top: 4px; }
     .btn-cancel { grid-column: span 2; background: #c8d6e5; color: #2f3542; }
 
     /* 미디어 쿼리 - 모바일 및 반응형 조절 */
@@ -733,7 +698,7 @@
 
   <!-- 모바일 탭 메뉴 -->
   <div class="mobile-tab-nav">
-    <button class="tab-btn active" onclick="switchTab('trays-tab', this)">🍱 식판 짜기</button>
+    <button class="tab-btn active" onclick="switchTab('trays-tab', this)">🍽️ 예쁜 접시</button>
     <button class="tab-btn" onclick="switchTab('sidebar-tab', this)">🥗 음식 고르기</button>
     <button class="tab-btn" onclick="switchTab('chatbot-tab', this)">🤖 AI 영양사</button>
   </div>
@@ -743,7 +708,7 @@
     <!-- 1. 음식 목록 (사이드바) -->
     <div class="sidebar tab-content" id="sidebar-tab" ondrop="dropToTrash(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
       <h2 id="food-list-title">맛있는 음식들 (100가지)</h2>
-      <div style="font-size:0.9rem; text-align:center; color:#666; margin-bottom:5px;">💡 음식을 <b>터치</b>하면 바로 식판에 담을 수 있어요!</div>
+      <div style="font-size:0.9rem; text-align:center; color:#666; margin-bottom:5px;">💡 음식을 <b>터치</b>하면 바로 접시에 담을 수 있어요!</div>
       <div class="search-container">
         <input type="text" id="food-search" placeholder="🔍 먹고 싶은 음식 검색..." onkeyup="filterFoods()" autocomplete="off">
       </div>
@@ -751,65 +716,49 @@
       <div id="food-list-container"></div>
     </div>
 
-    <!-- 2. 식판 영역 -->
+    <!-- 2. 예쁜 접시 4개 영역 -->
     <div class="trays-container tab-content active" id="trays-tab">
       
       <div class="total-day-cal">하루 총 섭취 열량: <span id="cal-total" class="cal-number">0</span> kcal<span class="warning-icon">🚨권장 열량 초과!</span></div>
-      <div style="font-size:0.95rem; text-align:center; color:#57606f; font-weight:bold; margin-top:-10px;">💡 식판 위 음식을 <b>터치</b>하면 다른 식판으로 자리를 옮기거나 지울 수 있어요!</div>
+      <div style="font-size:0.95rem; text-align:center; color:#57606f; font-weight:bold; margin-top:-10px;">💡 접시 위 음식을 <b>터치</b>하면 다른 접시로 자리를 옮기거나 지울 수 있어요!</div>
 
+      <!-- 접시 1: 아침 -->
       <div class="meal-section" data-meal="breakfast">
         <div class="meal-header">
-          <div class="meal-title title-breakfast">⛅ 활기찬 아침</div>
+          <div class="meal-title title-breakfast">⛅ 활기찬 아침 접시</div>
           <div class="meal-cal">열량: <span id="cal-breakfast" class="cal-number">0</span> kcal</div>
         </div>
-        <div class="tray breakfast">
-          <div class="slot slot-side1" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><span class="slot-label"></span></div>
-          <div class="slot slot-side2" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><span class="slot-label"></span></div>
-          <div class="slot slot-side3" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><span class="slot-label"></span></div>
-          <div class="slot slot-rice" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><span class="slot-label"></span></div>
-          <div class="slot slot-soup" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><span class="slot-label"></span></div>
-        </div>
+        <div class="meal-plate plate-bf" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
       </div>
 
+      <!-- 접시 2: 점심 -->
       <div class="meal-section" data-meal="lunch">
         <div class="meal-header">
-          <div class="meal-title title-lunch">☀️ 든든한 점심</div>
+          <div class="meal-title title-lunch">☀️ 든든한 점심 접시</div>
           <div class="meal-cal">열량: <span id="cal-lunch" class="cal-number">0</span> kcal</div>
         </div>
-        <div class="tray lunch">
-          <div class="slot slot-side1" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><span class="slot-label"></span></div>
-          <div class="slot slot-side2" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><span class="slot-label"></span></div>
-          <div class="slot slot-side3" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><span class="slot-label"></span></div>
-          <div class="slot slot-rice" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><span class="slot-label"></span></div>
-          <div class="slot slot-soup" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><span class="slot-label"></span></div>
-        </div>
+        <div class="meal-plate plate-lunch" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
       </div>
 
+      <!-- 접시 3: 저녁 -->
       <div class="meal-section" data-meal="dinner">
         <div class="meal-header">
-          <div class="meal-title title-dinner">🌙 편안한 저녁</div>
+          <div class="meal-title title-dinner">🌙 편안한 저녁 접시</div>
           <div class="meal-cal">열량: <span id="cal-dinner" class="cal-number">0</span> kcal</div>
         </div>
-        <div class="tray dinner">
-          <div class="slot slot-side1" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><span class="slot-label"></span></div>
-          <div class="slot slot-side2" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><span class="slot-label"></span></div>
-          <div class="slot slot-side3" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><span class="slot-label"></span></div>
-          <div class="slot slot-rice" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><span class="slot-label"></span></div>
-          <div class="slot slot-soup" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><span class="slot-label"></span></div>
-        </div>
+        <div class="meal-plate plate-dinner" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
       </div>
 
+      <!-- 접시 4: 간식 -->
       <div class="meal-section" data-meal="snack" style="margin-bottom: 40px;">
         <div class="meal-header">
-          <div class="meal-title title-snack">🍭 달콤한 간식</div>
+          <div class="meal-title title-snack">🍭 달콤한 간식 접시</div>
           <div class="meal-cal">열량: <span id="cal-snack" class="cal-number">0</span> kcal</div>
         </div>
-        <div class="snack-plate" id="snack-plate" ondrop="dropMultiple(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
-          <span class="slot-label"></span>
-        </div>
+        <div class="meal-plate plate-snack" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
       </div>
 
-      <div style="text-align: center; color: #7f8fa6; font-size: 0.95rem; margin-top: 10px; font-weight: bold; background: rgba(255,255,255,0.8); padding: 10px; border-radius: 12px; border: 1.5px dashed #dcdde1; max-width: 500px;">
+      <div style="text-align: center; color: #7f8fa6; font-size: 0.95rem; margin-top: 10px; font-weight: bold; background: rgba(255,255,255,0.8); padding: 10px; border-radius: 12px; border: 1.5px dashed #dcdde1; max-width: 550px;">
         ※ 식단의 모든 열량(kcal) 정보는 <span style="color:#e84118;">식품의약품안전처(MFDS)</span> 및 <span style="color:#0097e6;">국가표준식품성분표</span>를 기준 산출되었습니다.
       </div>
     </div>
@@ -847,12 +796,12 @@
       <div class="modal-food-info" id="modal-emoji">🍱</div>
       <div class="modal-food-name" id="modal-name">음식 이름</div>
       <div class="modal-food-cal" id="modal-cal">0 kcal</div>
-      <div style="margin-bottom: 12px; font-weight: bold; color: #57606f;">어디에 담을까요?</div>
+      <div style="margin-bottom: 12px; font-weight: bold; color: #57606f;">어느 접시에 담을까요?</div>
       <div class="modal-buttons">
-        <button class="modal-btn btn-bf" onclick="addFoodToMeal('breakfast')">⛅ 아침</button>
-        <button class="modal-btn btn-lunch" onclick="addFoodToMeal('lunch')">☀️ 점심</button>
-        <button class="modal-btn btn-dinner" onclick="addFoodToMeal('dinner')">🌙 저녁</button>
-        <button class="modal-btn btn-snack" onclick="addFoodToMeal('snack')">🍭 간식</button>
+        <button class="modal-btn btn-bf" onclick="addFoodToMeal('breakfast')">⛅ 아침 접시</button>
+        <button class="modal-btn btn-lunch" onclick="addFoodToMeal('lunch')">☀️ 점심 접시</button>
+        <button class="modal-btn btn-dinner" onclick="addFoodToMeal('dinner')">🌙 저녁 접시</button>
+        <button class="modal-btn btn-snack" onclick="addFoodToMeal('snack')">🍭 간식 접시</button>
         <button class="modal-btn btn-cancel" onclick="closeModal()">취소</button>
       </div>
     </div>
@@ -864,13 +813,13 @@
       <div class="modal-food-info" id="move-modal-emoji">🍱</div>
       <div class="modal-food-name" id="move-modal-name">음식 이름</div>
       <div class="modal-food-cal" id="move-modal-cal">0 kcal</div>
-      <div style="margin-bottom: 12px; font-weight: bold; color: #57606f;">어느 식판으로 자리를 옮길까요?</div>
+      <div style="margin-bottom: 12px; font-weight: bold; color: #57606f;">어느 접시로 옮길까요?</div>
       <div class="modal-buttons">
-        <button class="modal-btn btn-bf" onclick="moveDroppedItemToMeal('breakfast')">⛅ 아침으로 이동</button>
-        <button class="modal-btn btn-lunch" onclick="moveDroppedItemToMeal('lunch')">☀️ 점심으로 이동</button>
-        <button class="modal-btn btn-dinner" onclick="moveDroppedItemToMeal('dinner')">🌙 저녁으로 이동</button>
-        <button class="modal-btn btn-snack" onclick="moveDroppedItemToMeal('snack')">🍭 간식으로 이동</button>
-        <button class="modal-btn btn-delete" onclick="removeSelectedDroppedItem()">🗑️ 식판에서 지우기</button>
+        <button class="modal-btn btn-bf" onclick="moveDroppedItemToMeal('breakfast')">⛅ 아침 접시로</button>
+        <button class="modal-btn btn-lunch" onclick="moveDroppedItemToMeal('lunch')">☀️ 점심 접시로</button>
+        <button class="modal-btn btn-dinner" onclick="moveDroppedItemToMeal('dinner')">🌙 저녁 접시로</button>
+        <button class="modal-btn btn-snack" onclick="moveDroppedItemToMeal('snack')">🍭 간식 접시로</button>
+        <button class="modal-btn btn-delete" onclick="removeSelectedDroppedItem()">🗑️ 접시에서 지우기</button>
         <button class="modal-btn btn-cancel" onclick="closeMoveModal()">취소</button>
       </div>
     </div>
@@ -915,7 +864,7 @@
         { e:"🍎", n:"사과", c:52 }, { e:"🍌", n:"바나나", c:89 }, { e:"🍇", n:"포도", c:60 }, { e:"🍊", n:"귤", c:35 },
         { e:"🍉", n:"수박", c:45 }, { e:"🍓", n:"딸기", c:27 }, { e:"🍑", n:"복숭아", c:68 }, { e:"🍍", n:"파인애플", c:50 },
         { e:"🍅", n:"토마토", c:32 }, { e:"🥛", n:"요구르트", c:50 }, { e:"🧃", n:"오렌지주스", c:90 }, { e:"🌭", n:"핫도그", c:280 }, { e:"🍕", n:"피자", c:250 },
-        { e:"🍔", n:"햄버거", c:450 }, { e:"🍟", n:"감자튀김", c:310 }, { e:"🍦", n:"아이스크림", c:200 }, { e:"<ctrl42>", n:"초콜릿", c:270 },
+        { e:"🍔", n:"햄버거", c:450 }, { e:"🍟", n:"감자튀김", c:310 }, { e:"🍦", n:"아이스크림", c:200 }, { e:"🍫", n:"초콜릿", c:270 },
         { e:"🍬", n:"마카롱", c:140 }, { e:"🍰", n:"케이크", c:350 }, { e:"🍩", n:"도넛", c:230 }, { e:"🍪", n:"쿠키", c:200 },
         { e:"🥘", n:"떡볶이", c:400 }, { e:"🐟", n:"붕어빵", c:120 }, { e:"🥞", n:"호떡", c:260 }, { e:"🍡", n:"소떡소떡", c:350 },
         { e:"🍢", n:"핫바", c:200 }, { e:"🥖", n:"츄러스", c:280 }, { e:"🍡", n:"탕후루", c:250 }, { e:"🍬", n:"젤리", c:170 },
@@ -998,7 +947,7 @@
       
       newItem.innerHTML = `
         <div class="remove-btn" onclick="removeItem(this, event)">✕</div>
-        <div style="font-size:2rem; pointer-events:none; line-height:1;">${emoji}</div>
+        <div style="font-size:2.4rem; pointer-events:none; line-height:1;">${emoji}</div>
         <div class="dropped-cal">${cal}k</div>
       `;
       return newItem;
@@ -1008,25 +957,12 @@
       if (!selectedFoodForModal) return;
       
       const data = selectedFoodForModal;
-      let targetSlot = null;
+      const section = document.querySelector(`.meal-section[data-meal="${mealType}"]`);
+      const targetPlate = section ? section.querySelector('.meal-plate') : null;
 
-      if (mealType === 'snack') {
-        targetSlot = document.getElementById('snack-plate');
-      } else {
-        const section = document.querySelector(`.meal-section[data-meal="${mealType}"]`);
-        const slots = section.querySelectorAll('.slot');
-        targetSlot = slots[0]; 
-        for (let s of slots) {
-          if (s.children.length <= 1) {
-            targetSlot = s;
-            break;
-          }
-        }
-      }
-
-      if (targetSlot) {
+      if (targetPlate) {
         const newItem = createDroppedItemElement(data.e, data.n, data.c);
-        targetSlot.appendChild(newItem);
+        targetPlate.appendChild(newItem);
         updateCalories();
       }
 
@@ -1037,7 +973,7 @@
       }
     }
 
-    /* 식판 위 담긴 음식 자리 이동 모달 */
+    /* 접시 위 담긴 음식 자리 이동 모달 */
     function openMoveModal(itemElem, event) {
       event.stopPropagation();
       selectedDroppedItemForMove = itemElem;
@@ -1060,24 +996,11 @@
     function moveDroppedItemToMeal(targetMealType) {
       if (!selectedDroppedItemForMove) return;
       
-      let targetSlot = null;
+      const section = document.querySelector(`.meal-section[data-meal="${targetMealType}"]`);
+      const targetPlate = section ? section.querySelector('.meal-plate') : null;
 
-      if (targetMealType === 'snack') {
-        targetSlot = document.getElementById('snack-plate');
-      } else {
-        const section = document.querySelector(`.meal-section[data-meal="${targetMealType}"]`);
-        const slots = section.querySelectorAll('.slot');
-        targetSlot = slots[0];
-        for (let s of slots) {
-          if (s.children.length <= 1) {
-            targetSlot = s;
-            break;
-          }
-        }
-      }
-
-      if (targetSlot) {
-        targetSlot.appendChild(selectedDroppedItemForMove);
+      if (targetPlate) {
+        targetPlate.appendChild(selectedDroppedItemForMove);
         updateCalories();
       }
 
@@ -1136,39 +1059,18 @@
 
     function allowDrop(ev) {
       ev.preventDefault();
-      let target = ev.target.closest('.slot, .snack-plate, .sidebar');
+      let target = ev.target.closest('.meal-plate, .sidebar');
       if (target) target.classList.add('drag-over');
     }
 
     function dragLeave(ev) {
-      let target = ev.target.closest('.slot, .snack-plate, .sidebar');
+      let target = ev.target.closest('.meal-plate, .sidebar');
       if (target) target.classList.remove('drag-over');
     }
 
     function drop(ev) {
       ev.preventDefault();
-      let target = ev.target.closest('.slot');
-      if (!target) return;
-      target.classList.remove('drag-over');
-
-      if (draggedSourceElement && draggedSourceElement.classList.contains('dropped-item')) {
-        target.appendChild(draggedSourceElement);
-        updateCalories();
-        return;
-      }
-
-      const dataText = ev.dataTransfer.getData("text");
-      if (!dataText) return;
-      const data = JSON.parse(dataText);
-
-      const newItem = createDroppedItemElement(data.emoji, data.name, data.cal);
-      target.appendChild(newItem);
-      updateCalories();
-    }
-
-    function dropMultiple(ev) {
-      ev.preventDefault();
-      let target = ev.target.closest('.snack-plate');
+      let target = ev.target.closest('.meal-plate');
       if (!target) return;
       target.classList.remove('drag-over');
 
@@ -1332,13 +1234,13 @@
       const droppedItems = document.querySelectorAll('.dropped-item');
       const totalCal = document.getElementById('cal-total').innerText;
       
-      if (droppedItems.length === 0) return `현재 식판은 비어있습니다. (총 열량: 0 kcal)`;
+      if (droppedItems.length === 0) return `현재 접시는 비어있습니다. (총 열량: 0 kcal)`;
       
       let foods = [];
       droppedItems.forEach(item => {
         foods.push(item.getAttribute('data-name') || "알 수 없는 음식");
       });
-      return `현재 식판에 담긴 음식: ${foods.join(', ')} (총 열량: ${totalCal} kcal)`;
+      return `현재 접시에 담긴 음식: ${foods.join(', ')} (총 열량: ${totalCal} kcal)`;
     }
 
     async function sendMessageLogic(userText) {
